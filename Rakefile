@@ -23,7 +23,7 @@ spec = Gem::Specification.new do |s|
   s.autorequire = 'foursquare'
   s.files = %w(LICENSE README.rdoc Rakefile History) + Dir.glob("{lib,spec,script,examples}/**/*")
   
-  s.add_dependency(%q<httparty>, ["= 0.4.3"])
+  s.add_dependency('httparty', '0.4.3')
 end
 
 task :default => :spec
@@ -46,7 +46,7 @@ end
 
 desc "create a gemspec file"
 task :make_spec do
-  File.open("#{GEM}.gemspec", "w") do |file|
+  File.open("foursquare.gemspec", "w") do |file|
     file.puts spec.to_ruby
   end
 end
