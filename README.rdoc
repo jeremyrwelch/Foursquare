@@ -1,0 +1,3 @@
+== foursquare
+
+A gem that provides a simple Ruby wrapper for the Foursquare API.
