@@ -6,18 +6,15 @@ require 'spec/rake/spectask'
 
 spec = Gem::Specification.new do |s|
   s.name = "foursquare"
-  s.version = "0.0.1"
+  s.version = "0.0.2"
   s.author = "Jeremy Welch"
   s.email = "hello@jeremyrwelch.com"
-  s.homepage = "http://jeremyrwelch.com"
+  s.homepage = "http://foursquare.rubyforge.org"
   s.description = s.summary = "A simple Ruby wrapper for the Foursquare API"
   
   s.platform = Gem::Platform::RUBY
   s.has_rdoc = true
   s.extra_rdoc_files = ["README.rdoc", "LICENSE", "History"]
-  
-  # Uncomment this to add a dependency
-  # s.add_dependency "foo"
   
   s.require_path = 'lib'
   s.autorequire = 'foursquare'
