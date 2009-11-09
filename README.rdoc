@@ -1,25 +1,55 @@
 == foursquare
-A gem that provides a simple Ruby wrapper for the Foursquare API.
 
-== installation
-At the command line type:
+A simple Ruby Gem wrapper for the Foursquare API.
+
+== install
 	
 	gem install foursquare
 		
-== use example & list of methods
+== example
+	
+	require 'rubygems'
+	require 'foursquare'
 
-fq = Foursquare.new('username_or_phone','password')
-fq.test
-fq.cities
-fq.venues(lat,long,radius,limit,query)
-fq.tips(lat,long,limit)
-fq.check_city(lat, long)
-fq.switch_city(city_id)
-fq.friend_checkins
-fq.checkin(vid,venue,shout,private_checkin,tweetThis,geolat,geolong)
-fq.history(limit)
-fq.user_details(user_id,badges,mayor)
-fq.friends
-fq.venue_details(venue_id)
-fq.add_venue(city_id,name,address,cross_street,city,state,zip,phone)
-fq.add_tip(venue_id,text,type)
+	fq = Foursquare.new('username_or_phone','password')
+
+	fq.test
+	fq.cities
+	fq.venues(lat,long,radius,limit,query)
+	fq.tips(lat,long,limit)
+	fq.check_city(lat, long)
+	fq.switch_city(city_id)
+	fq.friend_checkins
+	fq.checkin(vid,venue,shout,private_checkin,tweetThis,geolat,geolong)
+	fq.history(limit)
+	fq.user_details(user_id,badges,mayor)
+	fq.friends
+	fq.venue_details(venue_id)
+	fq.add_venue(city_id,name,address,cross_street,city,state,zip,phone)
+	fq.add_tip(venue_id,text,type)
+	
+	
+== license 
+
+(the MIT license)
+
+Copyright (c) 2009 Workperch Inc
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

@@ -6,7 +6,7 @@ require 'spec/rake/spectask'
 
 spec = Gem::Specification.new do |s|
   s.name = "foursquare"
-  s.version = "0.0.2"
+  s.version = "0.1.0"
   s.author = "Jeremy Welch"
   s.email = "hello@jeremyrwelch.com"
   s.homepage = "http://foursquare.rubyforge.org"
