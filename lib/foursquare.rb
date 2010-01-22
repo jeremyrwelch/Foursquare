@@ -9,8 +9,9 @@ class Foursquare
   
 
 # auth user    
-  def initialize(user="",pass="")
+  def initialize(user="",pass="", options={})
     self.class.basic_auth user, pass
+    self.class.headers(options[:headers]) if options.has_key?(:headers)
   end
   
   
