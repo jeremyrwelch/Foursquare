@@ -51,8 +51,12 @@ class Foursquare
     self.class.get("/v1/checkin?vid=#{vid}&venue=#{venue}&shout=#{shout}&private=#{private_checkin}&twitter=#{tweetThis}&geolat=#{geolat}&geolong=#{geolong}")
   end
   
-  def history(limit="10")
-    self.class.get("/v1/history?l=#{limit}")
+  def history(options={})
+    limit = options.delete(:limit) || 10
+    uri = "/v1/history?l=#{limit}"
+    sinceid = options.delete(:sinceid)
+    uri << "&sinceid=#{sinceid}" unless sinceid.nil?
+    self.class.get(uri)
   end
   
   def user_details(user_id,badges="0",mayor="0")
