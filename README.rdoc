@@ -10,7 +10,8 @@ A simple Ruby Gem wrapper for the Foursquare API.
 	
 	require 'rubygems'
 	require 'foursquare'
-
+  
+  # foursquare's site uses email as the user name
 	fq = Foursquare.new('username_or_phone','password')
 
 	fq.test
