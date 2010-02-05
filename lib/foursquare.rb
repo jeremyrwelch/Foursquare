@@ -48,7 +48,7 @@ class Foursquare
   end
   
   def checkin(vid,venue,shout,private_checkin,tweetThis,geolat,geolong)
-    self.class.get("/v1/checkin?vid=#{vid}&venue=#{venue}&shout=#{shout}&private=#{private_checkin}&twitter=#{tweetThis}&geolat=#{geolat}&geolong=#{geolong}")
+    self.class.post("/v1/checkin?vid=#{vid}&venue=#{venue}&shout=#{shout}&private=#{private_checkin}&twitter=#{tweetThis}&geolat=#{geolat}&geolong=#{geolong}")
   end
   
   def history(options={})
