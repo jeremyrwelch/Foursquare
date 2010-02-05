@@ -43,8 +43,8 @@ class Foursquare
     self.class.post("/v1/switchcity", :body => {:cityid => city_id})
   end
 
-  def friend_checkins
-    self.class.get("/v1/checkins")
+  def checkins(options={})  
+    self.class.get("/v1/checkins",:query=>options)
   end
   
   def checkin(vid,venue,shout,private_checkin,tweetThis,geolat,geolong)
