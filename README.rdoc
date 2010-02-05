@@ -20,7 +20,8 @@ A simple Ruby Gem wrapper for the Foursquare API.
 	fq.tips(lat,long,limit)
 	fq.check_city(lat, long)
 	fq.switch_city(city_id)
-	fq.friend_checkins
+	fq.friend_checkins({:geolat=>'',:geolong=>''})
+	fq.checkins({:geolat=>'',:geolong=>''})
 	fq.checkin(vid,venue,shout,private_checkin,tweetThis,geolat,geolong)
 	fq.history(limit)
 	fq.user_details(user_id,badges,mayor)
