@@ -43,10 +43,23 @@ class Foursquare
     self.class.post("/v1/switchcity", :body => {:cityid => city_id})
   end
 
-  def checkins(options={})  
+  def friend_checkins(options={})
+      $stdout.puts "`friend_checkins` now calls `checkins` to match the foursquare api method call"
+      $stdout.puts "http://groups.google.com/group/foursquare-api/web/api-documentation"
+      checkins(options)
+  end 
+  
+  # URL: http://api.foursquare.com/v1/checkins
+  # Formats: XML, JSON
+  # HTTP Method(s): GET
+  # Requires Authentication: Yes
+  # Parameters:
+  # geolat - (optional, but recommended)
+  # geolong - (optional, but recommended)
+  def checkins(options={})
     self.class.get("/v1/checkins",:query=>options)
   end
-  
+    
   def checkin(vid,venue,shout,private_checkin,tweetThis,geolat,geolong)
     self.class.post("/v1/checkin?vid=#{vid}&venue=#{venue}&shout=#{shout}&private=#{private_checkin}&twitter=#{tweetThis}&geolat=#{geolat}&geolong=#{geolong}")
   end
