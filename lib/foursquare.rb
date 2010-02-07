@@ -63,11 +63,11 @@ class Foursquare
     self.class.get("/v1/user",:query=>options)
   end
   
-  def friends
-    self.class.get("/v1/friends")
+  def friends(options={})
+    self.class.get("/v1/friends",:query=>options)
   end
   
-  def venue_details(venue_id)
+  def venue_details(venue_id)                        
     self.class.get("/v1/venue?vid=#{venue_id}")
   end
 
@@ -79,7 +79,22 @@ class Foursquare
     options.merge!({:name=>name, :address=>address, :cross_street=>cross_street, :city=>city, :state=>state})
     self.class.post("/v1/addvenue", :body => options)
   end
-
+  
+  def propose_edit(venue_id,name,address,cross_street,city,state,options={})
+    unless venue_id && name && address && cross_street && city && state
+      raise ArgumentError, "A venue's venue_id, name, address, cross_street, city, state are required to propose_edit", caller
+    end
+    options.merge!({:venue_id=>venue_id,:name=>name, :address=>address, :cross_street=>cross_street, :city=>city, :state=>state})
+    self.class.post("/v1/venue/proposeedit", :body => options)
+  end
+     
+  def flag_venue_as_closed(venue_id)
+    unless venue_id
+      raise ArgumentError, "A venue's venue_id is required to flag as closed", caller
+    end
+    self.class.post("/v1/venue/flagclosed?vid=#{venue_id}")
+  end
+  
   # ===============
   # = TIP methods =
   # ===============

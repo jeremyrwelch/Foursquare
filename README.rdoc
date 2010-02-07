@@ -15,21 +15,36 @@ A simple Ruby Gem wrapper for the Foursquare API.
 	fq = Foursquare.new('username_or_phone','password')
 
 	fq.test
-	fq.cities
-	fq.venues(lat,long,radius,limit,query)
-	fq.tips(lat,long,limit)
-	fq.check_city(lat, long)
-	fq.switch_city(city_id)
-	fq.friend_checkins({:geolat=>'',:geolong=>''})
+
+	fq.venues(geolat, geolong, {:limit=>10,:q=>'pizza'})
+	fq.tips(geolat,geolong,{:limit=>10})
 	fq.checkins({:geolat=>'',:geolong=>''})
-	fq.checkin(vid,venue,shout,private_checkin,tweetThis,geolat,geolong)
-	fq.history(limit)
-	fq.user_details(user_id,badges,mayor)
-	fq.friends
+	fq.checkin(vid,venue,shout,{:private=>0,:twitter=>0,:facebook=>1,:geolat=>'12.03',:geolong=>'-123.33'})
+	fq.history({:limit=>10})
+	fq.user_details(user_id,{:badges=>0,:mayor=>0})
+	fq.friends({:uid=>99999})
 	fq.venue_details(venue_id)
-	fq.add_venue(city_id,name,address,cross_street,city,state,zip,phone)
-	fq.add_tip(venue_id,text,type)
-	
+	fq.add_venue(name,address,cross_street,city,state,options)
+	fq.propose_edit(venue_id,name,address,cross_street,city,state,options)
+	fq.flag_venue_as_closed(venue_id)
+	fq.add_tip(venue_id,text,{:type=type})
+	fq.mark_tip_as_todo(tid)
+	fq.mark_tip_as_done(tid)
+	fq.friend_requests
+	fq.friend_approve(uid)
+	fq.friend_deny(uid)
+	fq.request_friend(uid)
+	fq.find_friends_by_name('Bugs Bunny')
+	fq.find_friends_by_phone('8675309')
+	fq.find_friends_by_phone('github')
+	fq.set_pings('self','goodnight')
+
+
+  # Foursquare is moving the API to geolat/geolong and removing the concept of cities
+	fq.cities	
+	fq.check_city(geolat, geolong)
+	fq.switch_city(city_id)	
+	fq.friend_checkins({:geolat=>'',:geolong=>''})
 	
 == license 
 
