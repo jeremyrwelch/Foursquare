@@ -1,3 +1,9 @@
+== 0.2.0 February 7th, 2010
+* updated methods to reflect updates to Foursquare API
+* added validations
+* deprecated cities, check_city, switch_city, and friend_checkins calls in line with updates to the Foursquare API
+* updated readme to reflect code changes
+
 == 0.1.0 November 8th, 2009
 * added website
 * added defaults for optional method variables
