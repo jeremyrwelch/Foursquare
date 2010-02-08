@@ -6,19 +6,19 @@ require 'spec/rake/spectask'
 
 spec = Gem::Specification.new do |s|
   s.name = "foursquare"
-  s.version = "0.1.0"
-  s.author = "Jeremy Welch"
+  s.version = "0.2.0"
+  s.authors = ['Jeremy Welch', 'Thomas Hanley']
   s.email = "hello@jeremyrwelch.com"
   s.homepage = "http://foursquare.rubyforge.org"
   s.description = s.summary = "A simple Ruby wrapper for the Foursquare API"
   
   s.platform = Gem::Platform::RUBY
   s.has_rdoc = true
-  s.extra_rdoc_files = ["README.rdoc", "LICENSE", "History"]
+  s.extra_rdoc_files = ["README.rdoc", "History"]
   
   s.require_path = 'lib'
   s.autorequire = 'foursquare'
-  s.files = %w(LICENSE README.rdoc Rakefile History) + Dir.glob("{lib,spec,script,examples}/**/*")
+  s.files = %w(README.rdoc Rakefile History) + Dir.glob("{lib,spec,script,examples}/**/*")
   
   s.add_dependency('httparty', '0.4.3')
 end
