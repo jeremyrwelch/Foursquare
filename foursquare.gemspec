@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{A simple Ruby wrapper for the Foursquare API}
+  s.post_install_message = "NOTE: This version of the Foursquare Gem has significant changes to the way methods are called. Please review the examples in the README"
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
