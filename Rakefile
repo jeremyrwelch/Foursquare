@@ -6,11 +6,12 @@ require 'spec/rake/spectask'
 
 spec = Gem::Specification.new do |s|
   s.name = "foursquare"
-  s.version = "0.2.0"
+  s.version = "0.2.1"
   s.authors = ['Jeremy Welch', 'Thomas Hanley']
   s.email = "hello@jeremyrwelch.com"
   s.homepage = "http://foursquare.rubyforge.org"
   s.description = s.summary = "A simple Ruby wrapper for the Foursquare API"
+  s.post_install_message = "NOTE: This version of the Foursquare Gem has significant changes to the way methods are called. Please review the examples in the README"
   
   s.platform = Gem::Platform::RUBY
   s.has_rdoc = true
