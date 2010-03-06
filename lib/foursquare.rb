@@ -193,25 +193,27 @@ module Foursquare
     
     
     def raise_errors(response)
+      message = "(#{response.code}): #{response.message} - #{response.inspect} - #{response.body}"
+      
       case response.code.to_i
         when 400
-          raise RateLimitExceeded, "(#{response.code}): #{response.message} - #{response.inspect}"
+          raise BadRequest, message
         when 401
-          raise Unauthorized, "(#{response.code}): #{response.message} - #{response.inspect}"
+          raise Unauthorized, message
         when 403
-          raise General, "(#{response.code}): #{response.message} - #{response.inspect}"
+          raise General, message
         when 404
-          raise NotFound, "(#{response.code}): #{response.message} - #{response.inspect}"
+          raise NotFound, message
         when 500
-          raise InternalError, "Foursquare had an internal error. Please let them know in the group.\n#{"(#{response.code}): #{response.message} - #{response.inspect}"}"
+          raise InternalError, "Foursquare had an internal error. Please let them know in the group.\n#{message}"
         when 502..503
-          raise Unavailable, "(#{response.code}): #{response.message} - #{response.inspect}"
+          raise Unavailable, message
       end
     end
   end
   
   
-  class RateLimitExceeded < StandardError; end
+  class BadRequest < StandardError; end
   class Unauthorized      < StandardError; end
   class General           < StandardError; end
   class Unavailable       < StandardError; end
