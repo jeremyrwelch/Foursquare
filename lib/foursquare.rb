@@ -9,20 +9,16 @@ module Foursquare
     end
   
     def consumer
-      if @consumer
-        @consumer
-      else
-        @consumer = ::OAuth::Consumer.new(@consumer_token, @consumer_secret, {
-          :site               => "http://foursquare.com",
-          :scheme             => :header,
-          :http_method        => :post,
-          :request_token_path => "/oauth/request_token",
-          :access_token_path  => "/oauth/access_token",
-          :authorize_path     => "/oauth/authorize",
-          :proxy              => (ENV['HTTP_PROXY'] || ENV['http_proxy'])
-        })
-        @consumer
-      end
+      return @consumer if @consumer
+      @consumer = ::OAuth::Consumer.new(@consumer_token, @consumer_secret, {
+        :site               => "http://foursquare.com",
+        :scheme             => :header,
+        :http_method        => :post,
+        :request_token_path => "/oauth/request_token",
+        :access_token_path  => "/oauth/access_token",
+        :authorize_path     => "/oauth/authorize",
+        :proxy              => (ENV['HTTP_PROXY'] || ENV['http_proxy'])
+      })
     end
   
     def set_callback_url(url)
