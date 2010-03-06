@@ -51,8 +51,21 @@ A simple Ruby Gem wrapper for the Foursquare API. With OAuth authentication.
   
   # these all do the same thing
   # the response is a hashie object built from the checkin json.  so you can do new_checkin.shout
-  new_checkin = (foursquare.checkin = checkin)
+  new_checkin = foursquare.checkin(checkin)
+  new_checkin.class
+  => Hashie::Mash
+  new_checkin
+  => {...checkin hashie...}
   new_checkin = foursquare.send('checkin=', checkin)
+  new_checkin.class
+  => Hash
+  new_checkin
+  => {'checkin' => {...}}
+  new_checkin = foursquare.api(:checkin=, checkin)
+  new_checkin.class
+  => Hashie::Mash
+  new_checkin
+  => {:checkin => {...}}
   
   foursquare.history :limit => 10
   foursquare.api(:history, :limit => 10).checkins

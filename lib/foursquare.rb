@@ -129,7 +129,7 @@ module Foursquare
     
     # API method wrappers
     
-    def checkin=(params = {})
+    def checkin(params = {})
       api(:checkin=, params).checkin
     end
     
