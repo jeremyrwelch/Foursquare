@@ -3,6 +3,10 @@ require 'httparty'
 require 'hashie'
 require 'oauth'
 
+Hash.send :include, Hashie::HashExtensions
+
+
+
 module Foursquare
   class OAuth
     def initialize(ctoken, csecret, options={})
@@ -56,6 +60,8 @@ module Foursquare
     BASE_URL = 'http://api.foursquare.com/v1'
     FORMAT = 'json'
     
+    attr_accessor :oauth
+    
     def initialize(oauth)
       @oauth = oauth
     end
@@ -66,37 +72,43 @@ module Foursquare
     # .test                                          # api test method
     #  => {'response': 'ok'}
     # .checkin = {:shout => 'At home. Writing code'} # post new check in
-    #  => {...checkin hashie...}
+    #  => {...checkin hash...}
     # .history                                       # authenticated user's checkin history
     # => [{...checkin hashie...}, {...another checkin hashie...}]
-    # .send('venue.flagclosed', {:vid => 12345})     # flag venue 12345 as closed
+    # .send('venue.flagclosed=', {:vid => 12345})     # flag venue 12345 as closed
+    # => {'response': 'ok'}
+    # .venue_flagclosed = {:vid => 12345}
     # => {'response': 'ok'}
     #
-    def method_missing(method_symbol, *args)
-      method_name = method_symbol.to_s.split('.').join('/')
+    def method_missing(method_symbol, params = {})
+      method_name = method_symbol.to_s.split(/\.|_/).join('/')
       
-      if %w(=).include?(method_name[-1,1])
+      if (method_name[-1,1]) == '='
         method = method_name[0..-2]
-        operator = method_name[-1,1]
-        if operator == '='
-          post(url_for(method), args.first)
-        end
+        result = post(api_url(method), params)
+        params.replace(result[method] || result)
       else
-        get(url_for(method_name, args.first))
+        result = get(api_url(method_name, params))
+        result[method_name] || result
       end
     end
     
-    def url_for(method_name, options = nil)
+    def api(method_symbol, params = {})
+      Hashie::Mash.new(method_missing(method_symbol, params))
+    end
+    
+    def api_url(method_name, options = nil)
       params = options.is_a?(Hash) ? to_query_params(options) : options
       params = nil if params and params.blank?
-      
-      
-      (BASE_URL + '/' + method_name.split('.').join('/') + '.' + FORMAT + (params ? ('?' + params) : ''))
+      url = BASE_URL + '/' + method_name.split('.').join('/')
+      url += ".#{FORMAT}"
+      url += "?#{params}" if params
+      url
     end
     
     def parse_response(response)
       raise_errors(response)
-      Hashie::Mash.new(Crack::JSON.parse(response.body))
+      Crack::JSON.parse(response.body)
     end
     
     def to_query_params(options)
@@ -111,42 +123,91 @@ module Foursquare
       parse_response(@oauth.access_token.post(url, body))
     end
     
-    # API methods
+    # API method wrappers
     
-    def checkin(body = {})
-      unless body[:vid] || body[:venue] || body[:shout]
-        raise ArgumentError, "A vid(venue id), venue or shout is required to checkin", caller
-      end
-      
-      post(url_for('checkin'), body).checkin
+    def checkin=(params = {})
+      api(:checkin=, params).checkin
     end
     
     def history(params = {})
-      get(url_for('history', params)).checkins
+      api(:history, params).checkins
     end
     
-    def user(params = {})
-      get(url_for('user', params)).user
+    def addvenue=(params = {})
+      api(:addvenue=, params).venue
+    end
+    
+    def venue_proposeedit=(params = {})
+      api(:venue_proposeedit=, params)
+    end
+    
+    def venue_flagclosed=(params = {})
+      api(:venue_flagclosed=, params)
+    end
+    
+    def addtip=(params = {})
+      api(:addtip=, params).tip
+    end
+    
+    def tip_marktodo=(params = {})
+      api(:tip_marktodo=, params).tip
+    end
+    
+    def tip_markdone=(params = {})
+      api(:tip_markdone=, params).tip
+    end
+    
+    def friend_requests
+      api(:friend_requests).requests
+    end
+    
+    def friend_approve=(params = {})
+      api(:friend_approve=, params).user
+    end
+    
+    def friend_deny=(params = {})
+      api(:friend_deny=, params).user
+    end
+
+    def friend_sendrequest=(params = {})
+      api(:friend_sendrequest=, params).user
+    end
+    
+    def findfriends_byname(params = {})
+      api(:findfriends_byname, params).users
+    end
+    
+    def findfriends_byphone(params = {})
+      api(:findfriends_byphone, params).users
+    end
+    
+    def findfriends_bytwitter(params = {})
+      api(:findfriends_bytwitter, params).users
+    end
+    
+    def settings_setpings=(params = {})
+      api(:settings_setpings=, params).settings
     end
     
     private
     
     
     def raise_errors(response)
+      error_message = 
+      
       case response.code.to_i
         when 400
-          raise RateLimitExceeded, "(#{response.code}): #{response.message} - #{data['error'] if data}"
+          raise RateLimitExceeded, "(#{response.code}): #{response.message} - #{respond.inspect}"
         when 401
-          data = parse(response)
-          raise Unauthorized, "(#{response.code}): #{response.message} - #{data['error'] if data}"
+          raise Unauthorized, "(#{response.code}): #{response.message} - #{respond.inspect}"
         when 403
-          raise General, "(#{response.code}): #{response.message} - #{data['error'] if data}"
+          raise General, "(#{response.code}): #{response.message} - #{respond.inspect}"
         when 404
-          raise NotFound, "(#{response.code}): #{response.message}"
+          raise NotFound, "(#{response.code}): #{response.message} - #{respond.inspect}"
         when 500
-          raise InternalError, "Foursquare had an internal error. Please let them know in the group. (#{response.code}): #{response.message}"
+          raise InternalError, "Foursquare had an internal error. Please let them know in the group.\n#{"(#{response.code}): #{response.message} - #{respond.inspect}"}"
         when 502..503
-          raise Unavailable, "(#{response.code}): #{response.message}"
+          raise Unavailable, "(#{response.code}): #{response.message} - #{respond.inspect}"
       end
     end
   end

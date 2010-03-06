@@ -52,24 +52,30 @@ A simple Ruby Gem wrapper for the Foursquare API. With OAuth authentication.
   # these all do the same thing
   # the response is a hashie object built from the checkin json.  so you can do new_checkin.shout
   new_checkin = (foursquare.checkin = checkin)
-  new_checkin = foursquare.checkin(checkin)
   new_checkin = foursquare.send('checkin=', checkin)
   
   foursquare.history :limit => 10
+  foursquare.api(:history, :limit => 10).checkins
   foursquare.user :uid => user_id :badges => 0
   foursquare.user # currently authenticated user
   foursquare.friends :uid => 99999
   foursquare.venue :vid => venue_id
-  foursquare.addvenue :name => name, :address => address, :city => city, ...
-  foursquare.send 'venue.proposeedit=', :venue_id => venue_id, :name => name, :address => address, :city => ...
-  foursquare.flagclosed :vid => venue_id
-  foursquare.send 'addtip=', {:tip => 'here is a tip'}
-  foursquare.send 'tip.marktodo=', {:tid => tip_id}
-  foursquare.send 'friend.requests'
+  foursquare.addvenue = {:name => name, :address => address, :city => city, ...}
+  foursquare.venue_proposeedit = {:venue_id => venue_id, :name => name, :address => address, :city => ...}
+  foursquare.venue_flagclosed :vid => venue_id
+  foursquare.addtip = {:tip => 'here is a tip'}
+  foursquare.tip_marktodo = {:tid => tip_id}
+  foursquare.tip_markdone = {:tid => tip_id}
+  foursquare.friend_requests
+  foursquare.friend_approve = {:uid => friend_id}
   foursquare.send 'friend.approve=', {:uid => friend_id}
-  foursquare.send 'friend.deny=', {:uid => friend_id}
-  foursquare.send 'friend.sendrequest=', {:uid => friend_id}
-  foursquare.send 'findfriends/byname', {:q => name_string}
+  foursquare.send :friend_approve=, {:uid => friend_id}
+  foursquare.friend_deny = {:uid => friend_id}
+  foursquare.friend_sendrequest = {:uid => friend_id}
+  foursquare.findfriends_byname :q => search_string
+  foursquare.findfriends_byphone :q => '555 123'
+  foursquare.findfriends_bytwitter :q => twitter_name
+  foursquare.settings_setping = {:uid => user_id, :self => global_ping_status}
   
 == license 
 
