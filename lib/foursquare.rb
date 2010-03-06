@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'httparty'
+require 'hashie'
 require 'oauth'
 
 module Foursquare
@@ -65,9 +66,9 @@ module Foursquare
     # .test                                          # api test method
     #  => {'response': 'ok'}
     # .checkin = {:shout => 'At home. Writing code'} # post new check in
-    #  => {...checkin json...}
+    #  => {...checkin hashie...}
     # .history                                       # authenticated user's checkin history
-    # => {'checkins' : [{...checkin json...}]}
+    # => [{...checkin hashie...}, {...another checkin hashie...}]
     # .send('venue.flagclosed', {:vid => 12345})     # flag venue 12345 as closed
     # => {'response': 'ok'}
     #
@@ -95,7 +96,7 @@ module Foursquare
     
     def parse_response(response)
       raise_errors(response)
-      Crack::JSON.parse(response.body)
+      Hashie::Mash.new(Crack::JSON.parse(response.body))
     end
     
     def to_query_params(options)
@@ -117,11 +118,15 @@ module Foursquare
         raise ArgumentError, "A vid(venue id), venue or shout is required to checkin", caller
       end
       
-      post(url_for('checkin'), body)['checkin']
+      post(url_for('checkin'), body).checkin
     end
     
     def history
-      get(url_for('history'))['checkins']
+      get(url_for('history')).checkins
+    end
+    
+    def user(params = {})
+      get(url_for('user', params)).user
     end
     
     private
