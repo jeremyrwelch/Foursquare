@@ -121,8 +121,8 @@ module Foursquare
       post(url_for('checkin'), body).checkin
     end
     
-    def history
-      get(url_for('history')).checkins
+    def history(params = {})
+      get(url_for('history', params)).checkins
     end
     
     def user(params = {})
