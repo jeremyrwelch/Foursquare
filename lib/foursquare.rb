@@ -193,8 +193,6 @@ module Foursquare
     
     
     def raise_errors(response)
-      error_message = 
-      
       case response.code.to_i
         when 400
           raise RateLimitExceeded, "(#{response.code}): #{response.message} - #{respond.inspect}"
