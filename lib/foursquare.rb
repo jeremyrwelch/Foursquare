@@ -80,6 +80,10 @@ module Foursquare
     # .venue_flagclosed = {:vid => 12345}
     # => {'response': 'ok'}
     #
+    # Assignment methods(POSTs) always return a hash. Annoyingly Ruby always returns what's on
+    # the right side of the assignment operator. So there are some wrapper methods below
+    # for POSTs that make sure it gets turned into a hashie
+    #
     def method_missing(method_symbol, params = {})
       method_name = method_symbol.to_s.split(/\.|_/).join('/')
       
@@ -133,27 +137,27 @@ module Foursquare
       api(:history, params).checkins
     end
     
-    def addvenue=(params = {})
+    def addvenue(params = {})
       api(:addvenue=, params).venue
     end
     
-    def venue_proposeedit=(params = {})
+    def venue_proposeedit(params = {})
       api(:venue_proposeedit=, params)
     end
     
-    def venue_flagclosed=(params = {})
+    def venue_flagclosed(params = {})
       api(:venue_flagclosed=, params)
     end
     
-    def addtip=(params = {})
+    def addtip(params = {})
       api(:addtip=, params).tip
     end
     
-    def tip_marktodo=(params = {})
+    def tip_marktodo(params = {})
       api(:tip_marktodo=, params).tip
     end
     
-    def tip_markdone=(params = {})
+    def tip_markdone(params = {})
       api(:tip_markdone=, params).tip
     end
     
@@ -161,15 +165,15 @@ module Foursquare
       api(:friend_requests).requests
     end
     
-    def friend_approve=(params = {})
+    def friend_approve(params = {})
       api(:friend_approve=, params).user
     end
     
-    def friend_deny=(params = {})
+    def friend_deny(params = {})
       api(:friend_deny=, params).user
     end
 
-    def friend_sendrequest=(params = {})
+    def friend_sendrequest(params = {})
       api(:friend_sendrequest=, params).user
     end
     
@@ -185,7 +189,7 @@ module Foursquare
       api(:findfriends_bytwitter, params).users
     end
     
-    def settings_setpings=(params = {})
+    def settings_setpings(params = {})
       api(:settings_setpings=, params).settings
     end
     
