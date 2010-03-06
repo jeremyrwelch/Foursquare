@@ -1,197 +1,160 @@
 require 'rubygems'
 require 'httparty'
+require 'oauth'
 
-class Foursquare
-  # Current Version of the Foursquare API: http://groups.google.com/group/foursquare-api/web/api-documentation
-  
-  include HTTParty
-  base_uri 'api.foursquare.com'
-  format :xml
-
-  # auth user
-  # TODO: add OAuth support (follow Twitter gem from jnunemaker http://github.com/jnunemaker/twitter)
-  def initialize(user="",pass="", options={})
-    self.class.basic_auth user, pass
-    self.class.headers(options[:headers]) if options.has_key?(:headers)
-  end
-
-  # =========================
-  # = No Auth Required Methods =
-  # =========================
-  # test for response from Foursquare
-  def test 
-      self.class.get("/v1/test") 
-  end
-
-  def venues(geolat, geolong, options={})
-      options.merge!({:geolat=>geolat, :geolong=>geolong})
-      self.class.get("/v1/venues", :query=>options)
-  end
-
-  def tips(geolat,geolong,options={})
-      options.merge!({:geolat=>geolat, :geolong=>geolong})
-      self.class.get("/v1/tips", :query=>options)
-  end
-
-  # =========================
-  # = Auth Required Methods =
-  # =========================
-  def checkins(options={})
-    self.class.get("/v1/checkins",:query=>options)
-  end 
-
-  def checkin(vid=nil,venue=nil,shout=nil,options={})
-    unless vid || venue || shout
-      raise ArgumentError, "A vid or venue or shout is required to checkin", caller
-    end
-    options.merge!({:vid=>vid, :venue=>venue, :shout=>shout})    
-    self.class.post("/v1/checkin", :body => options)       
-  end
-  
-  def history(options={})
-    limit = options.delete(:limit) || 10
-    uri = "/v1/history?l=#{limit}"
-    sinceid = options.delete(:sinceid)
-    uri << "&sinceid=#{sinceid}" unless sinceid.nil?
-    self.class.get(uri)
-  end
-  
-  def user_details(user_id,options={})
-    unless user_id
-      raise ArgumentError, "A user_id is required to get details about a user", caller
-    end    
-    self.class.get("/v1/user",:query=>options)
-  end
-  
-  def friends(options={})
-    self.class.get("/v1/friends",:query=>options)
-  end
-  
-  def venue_details(venue_id)                        
-    self.class.get("/v1/venue?vid=#{venue_id}")
-  end
-
-  # city_id has been removed from API
-  def add_venue(name,address,cross_street,city,state,options={})
-    unless name && address && cross_street && city && state
-      raise ArgumentError, "A venue's name, address, cross_street, city, state are required to add_venue", caller
-    end                            
-    options.merge!({:name=>name, :address=>address, :cross_street=>cross_street, :city=>city, :state=>state})
-    self.class.post("/v1/addvenue", :body => options)
-  end
-  
-  def propose_edit(venue_id,name,address,cross_street,city,state,options={})
-    unless venue_id && name && address && cross_street && city && state
-      raise ArgumentError, "A venue's venue_id, name, address, cross_street, city, state are required to propose_edit", caller
-    end
-    options.merge!({:venue_id=>venue_id,:name=>name, :address=>address, :cross_street=>cross_street, :city=>city, :state=>state})
-    self.class.post("/v1/venue/proposeedit", :body => options)
-  end
-     
-  def flag_venue_as_closed(venue_id)
-    unless venue_id
-      raise ArgumentError, "A venue's venue_id is required to flag as closed", caller
-    end
-    self.class.post("/v1/venue/flagclosed?vid=#{venue_id}")
-  end
-  
-  # ===============
-  # = TIP methods =
-  # ===============
-  def add_tip(venue_id,text,options={})
-    unless venue_id && text
-      raise ArgumentError, "venue_id and text are required to add_tip", caller
-    end                      
-    options.merge!({:vid=>venue_id, :text=>text})
-    self.class.post("/v1/addtip", :body => options)
-  end
-  
-  def mark_tip_as_todo(tid)
-    unless tid 
-      raise ArgumentError, "tip_id is required to mark tip as todo", caller
-    end
-    self.class.post("/v1/tip/marktodo", :body => {:tip=>tip})
-  end 
-     
-  def mark_tip_as_done(tid)
-    unless tid 
-      raise ArgumentError, "tid is required to mark tip as done", caller
-    end
-    self.class.post("/v1/tip/markdone", :body => {:tip=>tip})
-  end
-
-  # ==================
-  # = FRIEND Methods =
-  # ==================
-  def friend_requests
-     self.class.get("/v1/friend/requests")
-  end
-
-  def friend_approve(uid)
-    unless uid 
-      raise ArgumentError, "uid is required to approve friend request", caller
-    end
-    self.class.post("/v1/friend/requests", :body => {:uid=>uid})
-  end
-     
-  def friend_deny(uid)
-    unless uid 
-      raise ArgumentError, "uid is required to deny friend request", caller
-    end
-    self.class.post("/v1/friend/deny", :body => {:uid=>uid})
-  end
-     
-  def request_friend(uid)
-    unless uid 
-      raise ArgumentError, "uid is required to request friend", caller
-    end
-    self.class.post("/v1/friend/sendrequest", :body => {:uid=>uid})
-  end
-  
-  # ================
-  # = FIND Methods =
-  # ================
-  def find_friends_by_name(q)
-    self.class.get("/v1/findfriends/byname", :query=>{:q=>q})
-  end 
-
-  def find_friends_by_phone(q)
-    self.class.get("/v1/findfriends/byphone", :query=>{:q=>q})
-  end 
-
-  def find_friends_by_twitter(q)
-    self.class.get("/v1/findfriends/bytwitter", :query=>{:q=>q})
-  end 
-
-  # ===============
-  # = SET methods =
-  # ===============
-  def set_pings(user_id=nil,ping=nil)
-    uid = user_id || "self"
-    self.class.post("/v1/settings/setpings?#{uid}=#{ping}")
-  end
-  
-  # From Foursquare API
-  # 20100108 - naveen - the concept of cities (cityid and all city-related methods) has now been removed
-  # Deprecated
-  def cities
-      self.class.get("/v1/cities")
-  end
-  # Deprecated
-    def check_city(geolat, geolong) 
-      $stderr.puts "`check_city` Deprecated: The idea of \"cityid\" is now deprecated from the API"
-      self.class.get("/v1/checkcity?geolat=#{geolat}&geolong=#{geolong}")
-    end
-  # Deprecated
-    def switch_city(city_id)
-      $stderr.puts "`switch_city` Deprecated: The idea of \"cityid\" is now deprecated from the API"
-      self.class.post("/v1/switchcity", :body => {:cityid => city_id})
-    end
-  # Method changed to call checkins to match API
-    def friend_checkins(options={})
-        $stderr.puts "`friend_checkins` now calls `checkins` to match the foursquare api method call"
-        $stderr.puts "http://groups.google.com/group/foursquare-api/web/api-documentation"
-        checkins(options)
+module Foursquare
+  class OAuth
+    def initialize(ctoken, csecret, options={})
+      @consumer_token, @consumer_secret = ctoken, csecret
     end
   
+    def consumer
+      if @consumer
+        @consumer
+      else
+        @consumer = ::OAuth::Consumer.new(@consumer_token, @consumer_secret, {
+          :site               => "http://foursquare.com",
+          :scheme             => :header,
+          :http_method        => :post,
+          :request_token_path => "/oauth/request_token",
+          :access_token_path  => "/oauth/access_token",
+          :authorize_path     => "/oauth/authorize",
+          :proxy              => (ENV['HTTP_PROXY'] || ENV['http_proxy'])
+        })
+        @consumer
+      end
+    end
+  
+    def set_callback_url(url)
+      clear_request_token
+      request_token(:oauth_callback => url)
+    end
+    
+    def request_token(options={})
+      @request_token ||= consumer.get_request_token(options)
+    end
+  
+    def authorize_from_request(request_token, request_secret, verifier)
+      request_token = ::OAuth::RequestToken.new(consumer, request_token, request_secret)
+      access_token = request_token.get_access_token(:oauth_verifier => verifier)
+      @atoken, @asecret = access_token.token, access_token.secret
+    end
+  
+    def access_token
+      @access_token ||= ::OAuth::AccessToken.new(consumer, @atoken, @asecret)
+    end
+  
+    def authorize_from_access(atoken, asecret)
+      @atoken, @asecret = atoken, asecret
+    end
+    
+    private
+    
+    def clear_request_token
+      @request_token = nil
+    end
+  end
+  
+  class Base
+    BASE_URL = 'http://api.foursquare.com/v1'
+    FORMAT = 'json'
+    
+    def initialize(oauth)
+      @oauth = oauth
+    end
+    
+    #
+    # Foursquare API: http://groups.google.com/group/foursquare-api/web/api-documentation
+    #
+    # .test                                          # api test method
+    #  => {'response': 'ok'}
+    # .checkin = {:shout => 'At home. Writing code'} # post new check in
+    #  => {...checkin json...}
+    # .history                                       # authenticated user's checkin history
+    # => {'checkins' : [{...checkin json...}]}
+    # .send('venue.flagclosed', {:vid => 12345})     # flag venue 12345 as closed
+    # => {'response': 'ok'}
+    #
+    def method_missing(method_symbol, *args)
+      method_name = method_symbol.to_s.split('.').join('/')
+      
+      if %w(=).include?(method_name[-1,1])
+        method = method_name[0..-2]
+        operator = method_name[-1,1]
+        if operator == '='
+          post(url_for(method), args.first)
+        end
+      else
+        get(url_for(method_name, args.first))
+      end
+    end
+    
+    def url_for(method_name, options = nil)
+      params = options.is_a?(Hash) ? to_query_params(options) : options
+      params = nil if params and params.blank?
+      
+      
+      (BASE_URL + '/' + method_name.split('.').join('/') + '.' + FORMAT + (params ? ('?' + params) : ''))
+    end
+    
+    def parse_response(response)
+      raise_errors(response)
+      Crack::JSON.parse(response.body)
+    end
+    
+    def to_query_params(options)
+      options.collect { |key, value| "#{key}=#{value}" }.join('&')
+    end
+    
+    def get(url)
+      parse_response(@oauth.access_token.get(url))
+    end
+    
+    def post(url, body)
+      parse_response(@oauth.access_token.post(url, body))
+    end
+    
+    # API methods
+    
+    def checkin(body = {})
+      unless body[:vid] || body[:venue] || body[:shout]
+        raise ArgumentError, "A vid(venue id), venue or shout is required to checkin", caller
+      end
+      
+      post(url_for('checkin'), body)['checkin']
+    end
+    
+    def history
+      get(url_for('history'))['checkins']
+    end
+    
+    private
+    
+    
+    def raise_errors(response)
+      case response.code.to_i
+        when 400
+          raise RateLimitExceeded, "(#{response.code}): #{response.message} - #{data['error'] if data}"
+        when 401
+          data = parse(response)
+          raise Unauthorized, "(#{response.code}): #{response.message} - #{data['error'] if data}"
+        when 403
+          raise General, "(#{response.code}): #{response.message} - #{data['error'] if data}"
+        when 404
+          raise NotFound, "(#{response.code}): #{response.message}"
+        when 500
+          raise InternalError, "Foursquare had an internal error. Please let them know in the group. (#{response.code}): #{response.message}"
+        when 502..503
+          raise Unavailable, "(#{response.code}): #{response.message}"
+      end
+    end
+  end
+  
+  
+  class RateLimitExceeded < StandardError; end
+  class Unauthorized      < StandardError; end
+  class General           < StandardError; end
+  class Unavailable       < StandardError; end
+  class InternalError     < StandardError; end
+  class NotFound          < StandardError; end
 end
