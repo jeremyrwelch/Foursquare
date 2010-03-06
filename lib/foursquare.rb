@@ -195,17 +195,17 @@ module Foursquare
     def raise_errors(response)
       case response.code.to_i
         when 400
-          raise RateLimitExceeded, "(#{response.code}): #{response.message} - #{respond.inspect}"
+          raise RateLimitExceeded, "(#{response.code}): #{response.message} - #{response.inspect}"
         when 401
-          raise Unauthorized, "(#{response.code}): #{response.message} - #{respond.inspect}"
+          raise Unauthorized, "(#{response.code}): #{response.message} - #{response.inspect}"
         when 403
-          raise General, "(#{response.code}): #{response.message} - #{respond.inspect}"
+          raise General, "(#{response.code}): #{response.message} - #{response.inspect}"
         when 404
-          raise NotFound, "(#{response.code}): #{response.message} - #{respond.inspect}"
+          raise NotFound, "(#{response.code}): #{response.message} - #{response.inspect}"
         when 500
-          raise InternalError, "Foursquare had an internal error. Please let them know in the group.\n#{"(#{response.code}): #{response.message} - #{respond.inspect}"}"
+          raise InternalError, "Foursquare had an internal error. Please let them know in the group.\n#{"(#{response.code}): #{response.message} - #{response.inspect}"}"
         when 502..503
-          raise Unavailable, "(#{response.code}): #{response.message} - #{respond.inspect}"
+          raise Unavailable, "(#{response.code}): #{response.message} - #{response.inspect}"
       end
     end
   end
