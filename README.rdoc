@@ -1,51 +1,76 @@
 == foursquare
 
-A simple Ruby Gem wrapper for the Foursquare API.
+A simple Ruby Gem wrapper for the Foursquare API. With OAuth authentication.
 
 == install
-	
-	gem install foursquare
-		
-== example
-	
-	require 'rubygems'
-	require 'foursquare'
   
-  # foursquare's site uses email as the user name
-	fq = Foursquare.new('username_or_phone','password')
-
-	fq.test
-
-	fq.venues(geolat, geolong, {:limit=>10,:q=>'pizza'})
-	fq.tips(geolat,geolong,{:limit=>10})
-	fq.checkins({:geolat=>'',:geolong=>''})
-	fq.checkin(vid,venue,shout,{:private=>0,:twitter=>0,:facebook=>1,:geolat=>'12.03',:geolong=>'-123.33'})
-	fq.history({:limit=>10})
-	fq.user_details(user_id,{:badges=>0,:mayor=>0})
-	fq.friends({:uid=>99999})
-	fq.venue_details(venue_id)
-	fq.add_venue(name,address,cross_street,city,state,options)
-	fq.propose_edit(venue_id,name,address,cross_street,city,state,options)
-	fq.flag_venue_as_closed(venue_id)
-	fq.add_tip(venue_id,text,{:type=type})
-	fq.mark_tip_as_todo(tid)
-	fq.mark_tip_as_done(tid)
-	fq.friend_requests
-	fq.friend_approve(uid)
-	fq.friend_deny(uid)
-	fq.request_friend(uid)
-	fq.find_friends_by_name('Bugs Bunny')
-	fq.find_friends_by_phone('8675309')
-	fq.find_friends_by_twitter('github')
-	fq.set_pings('self','goodnight')
-
-
-  # Foursquare is moving the API to geolat/geolong and removing the concept of cities
-	fq.cities	
-	fq.check_city(geolat, geolong)
-	fq.switch_city(city_id)	
-	fq.friend_checkins({:geolat=>'',:geolong=>''})
-	
+  gem install foursquare
+    
+== example
+  
+  require 'rubygems'
+  require 'foursquare'
+  
+  oauth_key 'your_key'
+  oauth_secret = 'your_secret'
+  
+  oauth = Foursquare::OAuth.new(oauth_key, oauth_secret)
+  
+  request_token = oauth.request_token.token
+  request_secret = oauth.request_token.secret
+  
+  # redirecting user to foursquare to authorize
+  oauth.request_token.authorize_url
+  
+  # foursquare redirects back to your callback url, passing the verifier in the url params
+  
+  access_token, access_secret = oauth.authorize_from_request(request_token, request_secret, verifier)
+  
+  # save the user's access token and secret
+  
+  
+  oauth = Foursquare::OAuth.new(oauth_key, oauth_secret)
+  oauth.authorize_from_access(access_token, access_secret)
+  foursquare = Foursquare::Base.new(
+  
+  
+  foursquare.test
+  
+  foursquare.venues :geolat => geolat, :geolong => geolong, :limit => 10, :q => 'pizza'
+  foursquare.tips :geolat => geolat, :geolong => geolong, :limit => 10
+  foursquare.checkins :geolat => geolat, :geolong => geolong
+  
+  checkin = {
+    :vid => vid,
+    :shout => "this is what i'm up to",
+    :venue => "Cohabitat",
+    :private => 0,
+    :twitter => 0,
+    :geolat => geolat,
+    :geolong => geolong
+  }
+  
+  # these all do the same thing
+  foursquare.checkin = checkin
+  foursquare.checkin(checkin)
+  foursquare.send 'checkin=', checkin
+  
+  foursquare.history :limit => 10
+  foursquare.user :uid => user_id :badges => 0
+  foursquare.user # currently authenticated user
+  foursquare.friends :uid => 99999
+  foursquare.venue :vid => venue_id
+  foursquare.addvenue :name => name, :address => address, :city => city, ...
+  foursquare.send 'venue.proposeedit=', :venue_id => venue_id, :name => name, :address => address, :city => ...
+  foursquare.flagclosed :vid => venue_id
+  foursquare.send 'addtip=', {:tip => 'here is a tip'}
+  foursquare.send 'tip.marktodo=', {:tid => tip_id}
+  foursquare.send 'friend.requests'
+  foursquare.send 'friend.approve=', {:uid => friend_id}
+  foursquare.send 'friend.deny=', {:uid => friend_id}
+  foursquare.send 'friend.sendrequest=', {:uid => friend_id}
+  foursquare.send 'findfriends/byname', {:q => name_string}
+  
 == license 
 
 (the MIT license)
