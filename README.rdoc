@@ -50,7 +50,7 @@ A simple Ruby Gem wrapper for the Foursquare API. With OAuth authentication.
   }
   
   # these all do the same thing
-  # the response is a hashie object built from the checkin json.  so you can do new_checkin.text
+  # the response is a hashie object built from the checkin json.  so you can do new_checkin.shout
   new_checkin = (foursquare.checkin = checkin)
   new_checkin = foursquare.checkin(checkin)
   new_checkin = foursquare.send('checkin=', checkin)
