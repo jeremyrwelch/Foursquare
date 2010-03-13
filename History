@@ -1,6 +1,10 @@
-== 0.2.2 March 5, 2010
+== 0.3.0 March 5, 2010
 * oauth support
 * method_missing api mapping
+
+== 0.2.1 February 17th, 2010
+* added post_install_message
+
 == 0.2.0 February 7th, 2010
 * updated methods to reflect updates to Foursquare API
 * added validations
