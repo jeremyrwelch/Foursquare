@@ -2,18 +2,18 @@
 
 Gem::Specification.new do |s|
   s.name = %q{foursquare}
-  s.version = "0.2.2"
+  s.version = "0.3.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jeremy Welch", "Thomas Hanley", "Elise Wood"]
   s.autorequire = %q{foursquare}
-  s.date = %q{2010-02-17}
+  s.date = %q{2010-03-13}
   s.description = %q{A simple Ruby wrapper for the Foursquare API}
   s.email = %q{hello@jeremyrwelch.com}
   s.extra_rdoc_files = ["README.rdoc", "History"]
   s.files = ["README.rdoc", "Rakefile", "History", "lib/foursquare.rb", "spec/foursquare_spec.rb", "spec/spec_helper.rb", "script/destroy", "script/generate"]
   s.homepage = %q{http://foursquare.rubyforge.org}
-  s.post_install_message = %q{NOTE: This version of the Foursquare Gem has significant changes to the way methods are called. Please review the examples in the README}
+  s.post_install_message = %q{NOTE: This version of the Foursquare Gem has added OAuth support. Basic Auth has been deprecated. Also significant changes have bee made to the way methods are called. Please review the examples in the README.}
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{A simple Ruby wrapper for the Foursquare API}

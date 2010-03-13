@@ -31,50 +31,96 @@
 		<div id="content">
 			<h2>install</h2>
 			<pre>
-			gem install foursquare
+  gem install foursquare
 			</pre>
 			<h2>example</h2>
 			<pre>
 
-        # foursquare's site uses email as the user name
-      	fq = Foursquare.new('username_or_phone','password')
+  require 'rubygems'
+  require 'foursquare'
 
-      	fq.test
+  oauth_key 'your_key'
+  oauth_secret = 'your_secret'
 
-      	fq.venues(geolat, geolong, {:limit=>10,:q=>'pizza'})
-      	fq.tips(geolat,geolong,{:limit=>10})
-      	fq.checkins({:geolat=>'',:geolong=>''})
-      	fq.checkin(vid,venue,shout,{:private=>0,:twitter=>0,:facebook=>1,:geolat=>'12.03',:geolong=>'-123.33'})
-      	fq.history({:limit=>10})
-      	fq.user_details(user_id,{:badges=>0,:mayor=>0})
-      	fq.friends({:uid=>99999})
-      	fq.venue_details(venue_id)
-      	fq.add_venue(name,address,cross_street,city,state,options)
-      	fq.propose_edit(venue_id,name,address,cross_street,city,state,options)
-      	fq.flag_venue_as_closed(venue_id)
-      	fq.add_tip(venue_id,text,{:type=type})
-      	fq.mark_tip_as_todo(tid)
-      	fq.mark_tip_as_done(tid)
-      	fq.friend_requests
-      	fq.friend_approve(uid)
-      	fq.friend_deny(uid)
-      	fq.request_friend(uid)
-      	fq.find_friends_by_name('Bugs Bunny')
-      	fq.find_friends_by_phone('8675309')
-      	fq.find_friends_by_twitter('github')
-      	fq.set_pings('self','goodnight')
+  oauth = Foursquare::OAuth.new(oauth_key, oauth_secret)
+
+  request_token = oauth.request_token.token
+  request_secret = oauth.request_token.secret
+
+  # redirecting user to foursquare to authorize
+  oauth.request_token.authorize_url
+
+  # foursquare redirects back to your callback url, passing the verifier in the url params
+
+  access_token, access_secret = oauth.authorize_from_request(request_token, request_secret, verifier)
+
+  # save the user's access token and secret
 
 
-        # Foursquare is moving the API to geolat/geolong and removing the concept of cities
-      	fq.cities	
-      	fq.check_city(geolat, geolong)
-      	fq.switch_city(city_id)	
-      	fq.friend_checkins({:geolat=>'',:geolong=>''})
+  oauth = Foursquare::OAuth.new(oauth_key, oauth_secret)
+  oauth.authorize_from_access(access_token, access_secret)
+  foursquare = Foursquare::Base.new(oauth)
+
+  foursquare.test
+
+  foursquare.venues :geolat => geolat, :geolong => geolong, :limit => 10, :q => 'pizza'
+  foursquare.tips :geolat => geolat, :geolong => geolong, :limit => 10
+  foursquare.checkins :geolat => geolat, :geolong => geolong
+
+  checkin = {
+    :vid => vid,
+    :shout => "this is what i'm up to",
+    :venue => "Cohabitat",
+    :private => 0,
+    :twitter => 0,
+    :geolat => geolat,
+    :geolong => geolong
+  }
+
+  # these all do the same thing
+  # the response is a hashie object built from the checkin json.  so you can do new_checkin.shout
+  new_checkin = foursquare.checkin(checkin)
+  new_checkin.class
+  => Hashie::Mash
+  new_checkin
+  => {...checkin hashie...}
+  new_checkin = foursquare.send('checkin=', checkin)
+  new_checkin.class
+  => Hash
+  new_checkin
+  => {'checkin' => {...}}
+  new_checkin = foursquare.api(:checkin=, checkin)
+  new_checkin.class
+  => Hashie::Mash
+  new_checkin
+  => {:checkin => {...}}
+
+  foursquare.history :limit => 10
+  foursquare.api(:history, :limit => 10).checkins
+  foursquare.user :uid => user_id :badges => 0
+  foursquare.user # currently authenticated user
+  foursquare.friends :uid => 99999
+  foursquare.venue :vid => venue_id
+  foursquare.addvenue :name => name, :address => address, :city => city, ...
+  foursquare.venue_proposeedit :venue_id => venue_id, :name => name, :address => address, :city => ...
+  foursquare.venue_flagclosed :vid => venue_id
+  foursquare.addtip :vid => 12345, :tip => 'here is a tip'
+  foursquare.tip_marktodo :tid => tip_id
+  foursquare.tip_markdone :tid => tip_id
+  foursquare.friend_requests
+  foursquare.friend_approve :uid => friend_id
+  foursquare.friend_deny :uid => friend_id
+  foursquare.friend_sendrequest :uid => friend_id
+  foursquare.findfriends_byname :q => search_string
+  foursquare.findfriends_byphone :q => '555 123'
+  foursquare.findfriends_bytwitter :q => twitter_name
+  foursquare.settings_setping :uid => user_id, :self => global_ping_status
+
 			</pre>
 			<h2>contact</h2>
 			<p>Report bugs at <a href="http://github.com/jeremyrwelch/Foursquare">Github</a>. Discuss in the Foursquare <a href="http://groups.google.com/group/foursquare-api/browse_thread/thread/9e814f3a3637283c">google group</a></p>
 			<hr/>
 			<p>Created by <a href="http://www.jeremyrwelch.com">Jeremy Welch</a></p>
-			<p>Updated by <a href="http://tjhanley.com">Thomas Hanley</a></p>
+			<p>Updated by <a href="http://tjhanley.com">Thomas Hanley</a> and <a href="http://github.com/glytch">glytch</a></p>
 	</div>
 </body>
