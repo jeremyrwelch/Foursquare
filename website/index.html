@@ -63,8 +63,8 @@
 
   foursquare.test
 
-  foursquare.venues :geolat => geolat, :geolong => geolong, :limit => 10, :q => 'pizza'
-  foursquare.tips :geolat => geolat, :geolong => geolong, :limit => 10
+  foursquare.venues :geolat => geolat, :geolong => geolong, :l => 10, :q => 'pizza'
+  foursquare.tips :geolat => geolat, :geolong => geolong, :l => 10
   foursquare.checkins :geolat => geolat, :geolong => geolong
 
   checkin = {
@@ -95,8 +95,8 @@
   new_checkin
   => {:checkin => {...}}
 
-  foursquare.history :limit => 10
-  foursquare.api(:history, :limit => 10).checkins
+  foursquare.history :l => 10
+  foursquare.api(:history, :l => 10).checkins
   foursquare.user :uid => user_id :badges => 0
   foursquare.user # currently authenticated user
   foursquare.friends :uid => 99999
