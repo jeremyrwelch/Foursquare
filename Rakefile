@@ -6,7 +6,7 @@ require 'spec/rake/spectask'
 
 spec = Gem::Specification.new do |s|
   s.name = "foursquare"
-  s.version = "0.3.1"
+  s.version = "0.3.2"
   s.authors = ['Jeremy Welch', 'Thomas Hanley', 'Elise Wood']
   s.email = "hello@jeremyrwelch.com"
   s.homepage = "http://foursquare.rubyforge.org"
@@ -21,7 +21,7 @@ spec = Gem::Specification.new do |s|
   s.autorequire = 'foursquare'
   s.files = %w(README.rdoc Rakefile History) + Dir.glob("{lib,spec,script,examples}/**/*")
   
-  s.add_dependency('httparty', '0.4.3')
+  s.add_dependency('httparty', '>=0.4.3')
 end
 
 task :default => :spec
