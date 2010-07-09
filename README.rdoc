@@ -11,7 +11,7 @@ A simple Ruby Gem wrapper for the Foursquare API. With OAuth authentication.
   require 'rubygems'
   require 'foursquare'
   
-  oauth_key 'your_key'
+  oauth_key = 'your_key'
   oauth_secret = 'your_secret'
   
   oauth = Foursquare::OAuth.new(oauth_key, oauth_secret)
