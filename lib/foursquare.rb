@@ -107,6 +107,7 @@ module Foursquare
       url = BASE_URL + '/' + method_name.split('.').join('/')
       url += ".#{FORMAT}"
       url += "?#{params}" if params
+      url = URI.escape(url)
       url
     end
     
