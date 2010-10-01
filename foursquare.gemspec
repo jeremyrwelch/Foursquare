@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jeremy Welch", "Thomas Hanley", "Elise Wood"]
   # s.autorequire = %q{foursquare}
-  s.date = %q{2010-03-13}
+  s.date = %q{2010-10-01}
   s.description = %q{A simple Ruby wrapper for the Foursquare API}
   s.email = %q{hello@jeremyrwelch.com}
   s.extra_rdoc_files = ["README.rdoc", "History"]
