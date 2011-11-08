@@ -1,5 +1,4 @@
-
-DEPRECATED
+== DEPRECATED
 This gem is no longer useful, as it does not support the Foursquare API 2.0. 
 
 Please refer to https://github.com/mattmueller/foursquare2
