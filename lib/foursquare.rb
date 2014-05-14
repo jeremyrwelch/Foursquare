@@ -16,7 +16,7 @@ module Foursquare
     def consumer
       return @consumer if @consumer
       @consumer = ::OAuth::Consumer.new(@consumer_token, @consumer_secret, {
-        :site               => "http://foursquare.com",
+        :site               => "https://foursquare.com",
         :scheme             => :header,
         :http_method        => :post,
         :request_token_path => "/oauth/request_token",
@@ -57,7 +57,7 @@ module Foursquare
   end
   
   class Base
-    BASE_URL = 'http://api.foursquare.com/v1'
+    BASE_URL = 'https://api.foursquare.com/v1'
     FORMAT = 'json'
     
     attr_accessor :oauth
