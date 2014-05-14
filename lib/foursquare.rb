@@ -10,7 +10,7 @@ Hash.send :include, Hashie::HashExtensions
 module Foursquare
   class OAuth
     def initialize(ctoken, csecret, options={})
-      @consumer_token, @consumer_secret = ctoken, csecret
+      @consumer_token, @consumer_secret , @options = ctoken, csecret ,options
     end
   
     def consumer
@@ -23,7 +23,7 @@ module Foursquare
         :access_token_path  => "/oauth/access_token",
         :authorize_path     => "/oauth/authorize",
         :proxy              => (ENV['HTTP_PROXY'] || ENV['http_proxy'])
-      })
+      }.merge(@options))
     end
   
     def set_callback_url(url)
